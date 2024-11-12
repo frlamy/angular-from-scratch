@@ -1,3 +1,5 @@
+import {Formatter} from "../services/formatter";
+
 export class PhoneNumberDirective {
     static selector = "[data-phone-number]";
 
@@ -5,17 +7,10 @@ export class PhoneNumberDirective {
 
     borderColor = 'red';
 
-    constructor(public element: HTMLInputElement) {}
+    constructor(public element: HTMLInputElement, private formatter: Formatter) {}
 
-    formatNumber (element: HTMLInputElement, interval: number, start: number, end: number) {
-        const value = element.value.replace(/\D/g, '').substring(start, end);
-
-        const groups = [];
-        for (let i = 0; i < value.length; i+=interval) {
-            groups.push(value.substring(i, i+interval));
-        }
-
-        element.value = groups.join(this.hasSpaces ? ' ': '');
+    formatNumber (element: HTMLInputElement) {
+        element.value = this.formatter.formatNumber(element.value, 10, 2, true);
     }
 
     init(){
@@ -24,7 +19,7 @@ export class PhoneNumberDirective {
         this.element.style.borderColor = this.element.getAttribute('data-border-color') || this.borderColor ;
 
         this.element.addEventListener('input', (event) => {
-            this.formatNumber(event.target as HTMLInputElement, 2, 0, 10)
+            this.formatNumber(event.target as HTMLInputElement)
         })
     }
 }

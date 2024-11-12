@@ -1,19 +1,20 @@
-// Framework
+import {Angular, Framework} from "./framework/framework";
+import {Formatter} from "./services/formatter";
+import {Verifier} from "./services/verifier";
 import {PhoneNumberDirective} from "./directives/phone-number.directive";
 import {CreditCardDirective} from "./directives/card-number.directive";
 
-const directives = [PhoneNumberDirective, CreditCardDirective];
-
-directives.forEach(directive => {
-    const elements = document.querySelectorAll<HTMLInputElement>(directive.selector);
-
-    elements.forEach(element => {
-        if (element) {
-            const directiveInstance = new directive(element)
-            directiveInstance.init();
+Angular.bootstrapApplication({
+    declarations: [PhoneNumberDirective, CreditCardDirective],
+    providers: [
+        {
+            provide: 'formatter',
+            construct: () => new Formatter()
+        },
+        {
+            provide: 'verifier',
+            construct: () => new Verifier()
         }
-    })
-})
-
-
+    ]
+});
 

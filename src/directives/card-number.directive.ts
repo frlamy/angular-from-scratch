@@ -1,19 +1,19 @@
+import {Formatter} from "../services/formatter";
+import {Verifier} from "../services/verifier";
+
 export class CreditCardDirective {
     static selector = "[data-card-number]";
 
     hasSpaces = true;
 
-    constructor(public element: HTMLInputElement) {}
+    constructor(
+        public element: HTMLInputElement,
+        private formatter: Formatter,
+        private verifier: Verifier,
+    ) {}
 
-    formatNumber (element: HTMLInputElement, interval: number, start: number, end: number) {
-        const value = element.value.replace(/\D/g, '').substring(start, end);
-
-        const groups = [];
-        for (let i = 0; i < value.length; i+=interval) {
-            groups.push(value.substring(i, i+interval));
-        }
-
-        element.value = groups.join(this.hasSpaces ? ' ' : '');
+    formatNumber (element: HTMLInputElement) {
+        element.value = this.formatter.formatNumber(element.value, 16, 4, this.hasSpaces);
     }
 
     init(){
@@ -22,7 +22,7 @@ export class CreditCardDirective {
         this.hasSpaces = this.element.getAttribute('data-has-spaces') !== 'false';
 
         this.element.addEventListener('input', (event) => {
-            this.formatNumber(event.target as HTMLInputElement, 4,0, 16)
+            this.formatNumber(event.target as HTMLInputElement)
         })
     }
 }
