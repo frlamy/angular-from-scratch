@@ -2,6 +2,7 @@ import {PhoneNumberDirective} from "../directives/phone-number.directive";
 import {CreditCardDirective} from "../directives/card-number.directive";
 import {Formatter} from "../services/formatter";
 import {Verifier} from "../services/verifier";
+import {Module, ProvidersMetadata, ServicesInstance} from "../types";
 
 export class Framework {
     /**
@@ -12,13 +13,13 @@ export class Framework {
     /**
      * Le tableau qui contient les instances de services déjà construites
      */
-    services: { name: string, instance: any }[] = [];
+    services: ServicesInstance = [];
 
 
     /**
      * Le tableau qui contient les définitions de mes services
      */
-    providers: {provide: string, construct: Function}[] = []
+    providers: ProvidersMetadata = []
 
     constructor() {}
 
@@ -27,10 +28,9 @@ export class Framework {
      * et les greffer aux éléments html
      * ciblés par les sélecteurs css
      */
-    bootstrapApplication(metadata: { providers: any[], declarations: any[] }) {
-
-        this.providers = metadata.providers || [];
+    bootstrapApplication(metadata: Module) {
         this.directives = metadata.declarations;
+        this.providers = metadata.providers || [];
 
         this.directives.forEach(directive => {
             const elements = document.querySelectorAll<HTMLInputElement>(directive.selector);
