@@ -18,7 +18,6 @@ const providersMetadata: ProvidersMetadata = [
     }
 ];
 
-
 Angular.bootstrapApplication({
     declarations: declarations,
     providers: providersMetadata

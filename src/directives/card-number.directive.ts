@@ -6,6 +6,8 @@ export class CreditCardDirective {
 
     hasSpaces = true;
 
+    borderColor = "purple";
+
     constructor(
         public element: HTMLInputElement,
         private formatter: Formatter,
@@ -17,7 +19,7 @@ export class CreditCardDirective {
     }
 
     init(){
-        this.element.style.borderColor = 'green';
+        this.element.style.borderColor = this.borderColor;
 
         this.hasSpaces = this.element.getAttribute('data-has-spaces') !== 'false';
 
