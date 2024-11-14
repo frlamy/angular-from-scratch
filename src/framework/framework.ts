@@ -1,8 +1,5 @@
-import {PhoneNumberDirective} from "../directives/phone-number.directive";
-import {CreditCardDirective} from "../directives/card-number.directive";
-import {Formatter} from "../services/formatter";
-import {Verifier} from "../services/verifier";
 import {Module, ProvidersMetadata, ServicesInstance} from "../types";
+import set from "lodash/set";
 
 export class Framework {
     /**
@@ -38,8 +35,30 @@ export class Framework {
             elements.forEach(element => {
                 if (element) {
                     const params = this.analyseDirectiveConstructor(directive, element);
-                    const directiveInstance = Reflect.construct(directive, params);
-                    directiveInstance.init();
+                    const directiveInstance: any = Reflect.construct(directive, params);
+                    const proxy = new Proxy(directiveInstance, {
+                        set(target, propName, value, proxy) {
+                            target[propName] = value;
+
+                            if (!directive.bindings) {
+                                return true;
+                            }
+
+                            const binding = directive.bindings.find((b) => b.propName === propName)
+
+                            if (!binding) {
+                                return true;
+                            }
+
+                            set(target.element,
+                                binding.attrName,
+                                value);
+
+                            return true;
+                        }
+                    })
+
+                    proxy.init();
                 }
             })
         })
@@ -51,7 +70,7 @@ export class Framework {
      * @param element
      * @private
      */
-    private analyseDirectiveConstructor(directive, element: HTMLInputElement){
+    private analyseDirectiveConstructor(directive: any, element: HTMLInputElement){
         const hasConstructor = /constructor\(.*\)/g.test(directive.toString());
 
         if (!hasConstructor) {

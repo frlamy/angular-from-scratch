@@ -8,6 +8,11 @@ import {HostBinding} from "../decorators/hostbinding";
     selector: "[data-phone-number]",
 })
 export class PhoneNumberDirective {
+    static bindings = [
+        { 'propName' :'placeholderText', attrName: 'placeholder'},
+        { 'propName': 'borderColor', attrName: 'style.borderColor'}
+    ]
+
     @Input('data-border-color')
     @HostBinding('style.borderColor')
     borderColor = 'red';
@@ -21,6 +26,11 @@ export class PhoneNumberDirective {
     @Hostlistener('input', ["event.target"])
     formatNumber (element: HTMLInputElement) {
         element.value = this.formatter.formatNumber(element.value, 10, 2, this.hasSpaces);
+    }
+
+    @Hostlistener('click')
+    onClick() {
+        this.placeholderText = 'Ave Caesar';
     }
 
     constructor(public element: HTMLInputElement, private formatter: Formatter) {}

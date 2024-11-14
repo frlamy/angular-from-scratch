@@ -14,8 +14,8 @@ import set from "lodash/set";
  * @param attrName L'attribut que l'on souhaite lier à la propriété de la directive
  * @constructor
  */
-export function HostBinding(attrName) {
-    return function (decoratedClass, propName) {
+export function HostBinding(attrName: string) {
+    return function (decoratedClass, propName: string) {
         const originalFunctionInit = decoratedClass["init"] || function(){}
 
         decoratedClass["init"] = function () {

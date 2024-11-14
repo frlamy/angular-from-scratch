@@ -8,7 +8,7 @@
  * onClick(target){}
  *
  */
-export function Hostlistener(eventName: string, eventParams: string[]) {
+export function Hostlistener(eventName: string, eventParams: string[] = []) {
     return function (decoratedClass, methodName) {
 
         const originalFunctionInit = decoratedClass["init"] || function () {};
