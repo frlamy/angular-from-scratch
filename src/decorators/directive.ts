@@ -1,4 +1,4 @@
-import {DirectiveMetadata} from "../types";
+import {DirectiveMetadata} from "../framework/types";
 
 /**
  * @param metadata Un tableau contenant le selecteur et les providers de la directive

@@ -17,7 +17,20 @@ import set from "lodash/set";
 export function HostBinding(attrName: string) {
     return function (decoratedClass, propName: string) {
         const originalFunctionInit = decoratedClass["init"] || function(){}
+        console.log('avant =' + decoratedClass.constructor);
+        console.log(decoratedClass["bindings"])
 
+        const bindings: any[] = decoratedClass["bindings"] || [];
+
+        bindings.push({
+            attrName,
+            propName
+        });
+
+        decoratedClass["bindings"] = bindings;
+        console.log("Après=")
+
+        console.log(decoratedClass["bindings"])
         decoratedClass["init"] = function () {
             set(this.element, attrName, this[propName])
             originalFunctionInit.call(this)

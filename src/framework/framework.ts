@@ -1,5 +1,6 @@
-import {Module, ProvidersMetadata, ServicesInstance} from "../types";
+import {Module, ProvidersMetadata, ServicesInstance} from "./types";
 import set from "lodash/set";
+import {Detector} from "./change-detector";
 
 export class Framework {
     /**
@@ -40,19 +41,17 @@ export class Framework {
                         set(target, propName, value, proxy) {
                             target[propName] = value;
 
-                            if (!directive.bindings) {
+                            if (!target.bindings) {
                                 return true;
                             }
 
-                            const binding = directive.bindings.find((b) => b.propName === propName)
+                            const binding = target.bindings.find((b) => b.propName === propName)
 
                             if (!binding) {
                                 return true;
                             }
 
-                            set(target.element,
-                                binding.attrName,
-                                value);
+                            Detector.addBinding(target.element, binding.attrName, value);
 
                             return true;
                         }

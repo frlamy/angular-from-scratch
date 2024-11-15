@@ -3,15 +3,17 @@ import {Directive} from "../decorators/directive";
 import {Input} from "../decorators/input";
 import {Hostlistener} from "../decorators/hostlistener";
 import {HostBinding} from "../decorators/hostbinding";
+import {Detector} from "../framework/change-detector";
 
 @Directive({
     selector: "[data-phone-number]",
 })
 export class PhoneNumberDirective {
-    static bindings = [
-        { 'propName' :'placeholderText', attrName: 'placeholder'},
-        { 'propName': 'borderColor', attrName: 'style.borderColor'}
-    ]
+    @HostBinding('value')
+    value = "";
+
+    @HostBinding('placeholder')
+    placeholderText:string = "Hello World";
 
     @Input('data-border-color')
     @HostBinding('style.borderColor')
@@ -20,17 +22,17 @@ export class PhoneNumberDirective {
     @Input('data-has-spaces')
     hasSpaces = true;
 
-    @HostBinding('placeholder')
-    placeholderText:string = "Hello World";
-
-    @Hostlistener('input', ["event.target"])
-    formatNumber (element: HTMLInputElement) {
-        element.value = this.formatter.formatNumber(element.value, 10, 2, this.hasSpaces);
+    @Hostlistener('input', ["event.target.value"])
+    formatNumber (value:string) {
+        this.value = this.formatter.formatNumber(value, 10, 2, this.hasSpaces);
+        Detector.digest();
     }
 
     @Hostlistener('click')
     onClick() {
-        this.placeholderText = 'Ave Caesar';
+        this.placeholderText = 'Ave Ceasar';
+        this.placeholderText = 'Ave Selma';
+        Detector.digest();
     }
 
     constructor(public element: HTMLInputElement, private formatter: Formatter) {}

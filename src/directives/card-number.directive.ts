@@ -4,6 +4,7 @@ import {Directive} from "../decorators/directive";
 import {HostBinding} from "../decorators/hostbinding";
 import {Input} from "../decorators/input";
 import {Hostlistener} from "../decorators/hostlistener";
+import {Detector} from "../framework/change-detector";
 
 @Directive({
     selector: "[data-card-number]",
@@ -16,9 +17,13 @@ export class CreditCardDirective {
     @HostBinding('style.borderColor')
     borderColor = "purple";
 
-    @Hostlistener("input", ["event.target"])
-    formatNumber (element: HTMLInputElement) {
-        element.value = this.formatter.formatNumber(element.value, 16, 4, this.hasSpaces);
+    @HostBinding('value')
+    value = "";
+
+    @Hostlistener("input", ["event.target.value"])
+    formatNumber (value: string) {
+        this.value = this.formatter.formatNumber(value, 16, 4, this.hasSpaces);
+        Detector.digest();
     }
 
     constructor(

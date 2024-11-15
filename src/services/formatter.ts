@@ -1,7 +1,5 @@
 export class Formatter {
-    constructor() {
-        console.log('Formateur');
-    }
+    constructor() {}
 
     formatNumber (initialValue: string, length: number, groupLength: number, hasSpaces: boolean = true) {
         const value = initialValue.replace(/\D/g, '').substring(0, length);
