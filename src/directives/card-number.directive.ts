@@ -4,7 +4,6 @@ import {Directive} from "../decorators/directive";
 import {HostBinding} from "../decorators/hostbinding";
 import {Input} from "../decorators/input";
 import {Hostlistener} from "../decorators/hostlistener";
-import {Detector} from "../framework/change-detector";
 
 @Directive({
     selector: "[data-card-number]",
