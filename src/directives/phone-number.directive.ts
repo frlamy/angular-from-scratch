@@ -25,14 +25,12 @@ export class PhoneNumberDirective {
     @Hostlistener('input', ["event.target.value"])
     formatNumber (value:string) {
         this.value = this.formatter.formatNumber(value, 10, 2, this.hasSpaces);
-        Detector.digest();
     }
 
     @Hostlistener('click')
     onClick() {
         this.placeholderText = 'Ave Ceasar';
         this.placeholderText = 'Ave Selma';
-        Detector.digest();
     }
 
     constructor(public element: HTMLInputElement, private formatter: Formatter) {}

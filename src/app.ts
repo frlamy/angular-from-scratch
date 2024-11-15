@@ -4,6 +4,7 @@ import {Verifier} from "./services/verifier";
 import {PhoneNumberDirective} from "./directives/phone-number.directive";
 import {CreditCardDirective} from "./directives/card-number.directive";
 import {ProvidersMetadata} from "./framework/types";
+import {NgZone} from "./framework/zone";
 
 const declarations: any[] = [PhoneNumberDirective, CreditCardDirective]
 
@@ -18,8 +19,10 @@ const providersMetadata: ProvidersMetadata = [
     }
 ];
 
-Angular.bootstrapApplication({
-    declarations: declarations,
-    providers: providersMetadata
+NgZone.run(() => {
+    Angular.bootstrapApplication({
+        declarations: declarations,
+        providers: providersMetadata
+    });
 });
 
