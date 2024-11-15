@@ -20,10 +20,7 @@ const providersMetadata: ProvidersMetadata = [
     }
 ];
 
-NgZone.run(() => {
-    Angular.bootstrapApplication({
-        declarations: declarations,
-        providers: providersMetadata
-    });
+Angular.bootstrapApplication({
+    declarations: declarations,
+    providers: providersMetadata
 });
-
