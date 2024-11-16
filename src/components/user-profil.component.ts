@@ -27,8 +27,4 @@ export class UserProfilComponent {
     }
 
     constructor(public element: HTMLElement) {}
-
-    init() {
-        console.log('test');
-    }
 }

@@ -4,44 +4,30 @@ export function Component(metadata: ComponentMetadata) {
     return function(decoratedClass) {
         decoratedClass["selector"] = metadata.selector;
         decoratedClass["providers"] = metadata.providers || [];
+        decoratedClass.prototype.template = metadata.template;
+
+        const originalFunctionInit: Function = decoratedClass.prototype.init || function () {};
+
+        decoratedClass.prototype.init = function () {
+            originalFunctionInit.call(this);
+            this.render();
+        }
 
         decoratedClass.prototype.render = function () {
-            let renderedTemplate = metadata.template;
+            let renderedTemplate = this.updateInterpolations(this.template);
 
-            metadata.template.match(/{{.*?}}/g).forEach(interpolation => {
-                const propName : string = interpolation.replace(/[{}]/g, '').trim()
-                renderedTemplate = renderedTemplate.replace(interpolation, this[propName]);
+            const [eventsToBind, templateWithEvents] = this.updateEventBindings(renderedTemplate);
 
-            });
+            this.element.innerHTML = templateWithEvents;
 
-            const eventsToBind: {
-                elementId: string,
-                eventName: string,
-                methodName: string
-            }[] = [];
+            this.bindEventsToDOMElements(eventsToBind);
+        }
 
-            metadata.template
-                .match(/<.*?\(.*?\)=".*?".*?>/g)
-                .forEach((tag:string) => {
-                    const randomId: string = "event-listener-"+Math.ceil(Math.random()*1000);
-
-                    tag.match(/\(.*?\)=".*?"/g)
-                        .forEach((event:string) => {
-                            const eventName = event.match(/\((.*)?\)/)[1];
-                            const methodName = event.match(/"(.*)"/)[1];
-                            eventsToBind.push({
-                                elementId : randomId,
-                                eventName,
-                                methodName
-                            });
-                        });
-
-                    const renderedTag:string = tag.replace(/\(.*?\)=".*?"/g, `id=${randomId}`);
-
-                    renderedTemplate = renderedTemplate.replace(tag, renderedTag);
-                });
-
-            this.element.innerHTML = renderedTemplate;
+        decoratedClass.prototype.bindEventsToDOMElements = function (eventsToBind:{
+            elementId: string,
+            eventName: string,
+            methodName: string
+        }[]) {
             eventsToBind.forEach(eventsToBind => {
                 this.element.querySelector("#" + eventsToBind.elementId)
                     .addEventListener(eventsToBind.eventName, () => {
@@ -51,11 +37,42 @@ export function Component(metadata: ComponentMetadata) {
             });
         }
 
-        const originalFunctionInit: Function = decoratedClass.prototype.init || function () {};
+        decoratedClass.prototype.updateEventBindings = function(template: string) {
+            const openingTags: RegExpMatchArray = template.match(/<.*? \(.*?\)=".*?".*?>/gm);
 
-        decoratedClass.prototype.init = function () {
-            originalFunctionInit.call(this);
-            this.render();
+            let templateWithEvents: string = template;
+
+            const eventsToBind: any[] = [];
+
+            openingTags.forEach((openingTag :string) => {
+                const randomId: string = "event-listener-"+Math.ceil(Math.random()*1000);
+                const events = openingTag.match(/\((.*?)\)="(.*?)"/gm);
+
+                events.forEach((event:string) => {
+                    const [str, eventName, methodName] = /\((.*?)\)="(.*?)"/gm.exec(
+                        event
+                    );
+                    eventsToBind.push({
+                        eventName,
+                        methodName,
+                        elementId: randomId,
+                    });
+                });
+
+                const finalOpeningTag = openingTag.replace(/\(.*?\)=".*?"/g, `id=${randomId}`);
+
+                templateWithEvents = templateWithEvents.replace(
+                    openingTag,
+                    finalOpeningTag
+                );
+            });
+
+            return [eventsToBind, templateWithEvents];
+        }
+
+        decoratedClass.prototype.updateInterpolations = function (template: string) {
+            return template.replace(/{{.*?}}/gm, (str) => this[str.replace(/{{|}}|\s/g, "")]
+            );
         }
     }
 }
