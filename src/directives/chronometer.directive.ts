@@ -3,7 +3,7 @@ import {HostBinding} from "../decorators/hostbinding";
 import {Hostlistener} from "../decorators/hostlistener";
 
 @Directive({
-    selector: "div[chronometer]",
+    selector: "[chronometer]",
 })
 export class ChronometerDirective {
     @HostBinding('textContent')

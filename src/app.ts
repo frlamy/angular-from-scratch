@@ -4,10 +4,10 @@ import {Verifier} from "./services/verifier";
 import {PhoneNumberDirective} from "./directives/phone-number.directive";
 import {CreditCardDirective} from "./directives/card-number.directive";
 import {ProvidersMetadata} from "./framework/types";
-import {NgZone} from "./framework/zone";
 import {ChronometerDirective} from "./directives/chronometer.directive";
+import {UserProfilComponent} from "./components/user-profil.component";
 
-const declarations: any[] = [PhoneNumberDirective, CreditCardDirective, ChronometerDirective]
+const declarations: any[] = [PhoneNumberDirective, CreditCardDirective, ChronometerDirective, UserProfilComponent]
 
 const providersMetadata: ProvidersMetadata = [
     {

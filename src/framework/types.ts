@@ -50,3 +50,20 @@ export type DirectiveMetadata = {
      */
     providers?: ProvidersMetadata
 }
+
+
+export type ComponentMetadata = {
+    /**
+     * Le sélecteur css qui explique quels sont les éléments
+     * ciblés par cette directive
+     */
+    selector: string;
+    /**
+     * La liste des providers que la directive précise
+     */
+    providers?: ProvidersMetadata;
+    /**
+     * Le template du composant html
+     */
+    template: string;
+}
