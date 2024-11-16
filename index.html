@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Recreate Angular</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <link rel="shortcut icon" href="#">
+    <script src="src/app.ts" type="module" defer></script>
+</head>
+<body>
+    <div class="container">
+        <article>
+            <header>
+                <h1 class="text-center">Angular</h1>
+            </header>
+            <user-profil first-name="John"
+                last-name="Doe"
+                job="Teacher">
+            </user-profil>
+            <hr>
+            <counter initial-value="10" step="100"></counter>
+            <hr>
+            <div chronometer>Chronometer</div>
+        </article>
+        <input type="text" placeholder="Mobile number" data-border-color="yellow" data-phone-number>
+        <input type="text" [data-has-spaces]="false" data-border-color="blue" placeholder="Home number" data-phone-number>
+        <input type="text" placeholder="Card number" data-card-number>
+    </div>
+</body>
+</html>
